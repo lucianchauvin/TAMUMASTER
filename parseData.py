@@ -18,7 +18,7 @@ with open("bigData.json", "a") as outfile:
         data = data["data"]
         for x in data:
             courseCount += 1
-            subject = x['subjectDescription']
+            subject = x['subject']
             courseNum = x['courseNumber']
             courseTitle = x['courseTitle']
             building = x['meetingsFaculty'][0]['meetingTime']['building']
