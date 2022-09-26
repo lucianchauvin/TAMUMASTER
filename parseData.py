@@ -20,6 +20,7 @@ with open("bigData.json", "a") as outfile:
             courseCount += 1
             subject = x['subject']
             courseNum = x['courseNumber']
+            enrollment = x['enrollment']
             courseTitle = x['courseTitle']
             building = x['meetingsFaculty'][0]['meetingTime']['building']
             room = x['meetingsFaculty'][0]['meetingTime']['room']
@@ -31,7 +32,7 @@ with open("bigData.json", "a") as outfile:
                 teacher = x['faculty'][0]['displayName']
                 teacherEmail = x['faculty'][0]['emailAddress']
             
-            fileDict.append({"subject":subject, "courseNum":courseNum, "courseTitle":courseTitle, "building":building, "room":room, "beginTime":beginTime, "endTime":endTime, "days":days, "seats":seats, "teacher":teacher, "teacherEmail":teacherEmail})
+            fileDict.append({"subject":subject, "courseNum":courseNum, "courseTitle":courseTitle, "building":building, "room":room, "beginTime":beginTime, "endTime":endTime, "days":days, "enrollment":enrollment, "seats":seats, "teacher":teacher, "teacherEmail":teacherEmail})
         
         json_object = json.dumps(fileDict)
         outfile.write('"' + file[0:-4] + '":')

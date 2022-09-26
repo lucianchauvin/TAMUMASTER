@@ -1,4 +1,5 @@
 import json
+from unittest.util import sorted_list_difference
 import pytz
 from datetime import datetime
 import calendar
@@ -11,43 +12,20 @@ f.close()
 data = [y for sub in [data.get(x) for x in data] for y in sub]
 
 
-def sortData(data, subject=None, courseNum=None, courseTitle=None, building=None, room=None, current=False, today=False, beginTime=None, endTime=None, days=None, seats=None, teacher=None, teacherEmail=None):
+def sortData(data, subject=None, courseNum=None, courseTitle=None, building=None, room=None, current=False, today=False, beginTime=None, endTime=None, days=None, openSeats=False, teacher=None, teacherEmail=None):
     sorted = data
-    if (beginTime != None and endTime != None) or today or current or days != None:
+    if current:
         sortedTemp = []
-
         dayDict = {'Sunday': 0, 'Monday': 1, 'Tuesday': 2,
                    'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6}
-        dayClas = [0,0,0,0,0,0,0]
-        
-        if current:
-            endTime, beginTime = int(datetime.now(zone).strftime(
-                "%H%M")), int(datetime.now(zone).strftime("%H%M"))
-            day = calendar.day_name[datetime.now(zone).weekday()]
-            dayClas[dayDict[day]] = True
-            if datetime.now(zone).strftime("%p") == "PM":
-                endTime += 1200
-                beginTime += 1200
-        elif today:
-            day = calendar.day_name[datetime.now(zone).weekday()]
-            dayClas[dayDict[day]] = True
-        else:
-            if days != None:
-                dayClas = days
-            else:
-                dayClas = [1,1,1,1,1,1,1]
-        
-        for j in sorted:
-            if j['beginTime'] != None and j['endTime'] != None and current:
-                if int(j['beginTime']) < endTime and int(j['endTime']) > beginTime and list(j['days'])[dayDict[day]]:
-                    sortedTemp.append(j)
-            elif today:
-                if list(j['days'])[dayDict[day]]:
-                    sortedTemp.append(j)
-            else:
-                if list(j['days']) == dayClas:
-                    sortedTemp.append(j)
+        dayClas = [0, 0, 0, 0, 0, 0, 0]
+        time = int(datetime.now(zone).strftime("%H%M"))
+        day = calendar.day_name[datetime.now(zone).weekday()]
 
+        for j in sorted:
+            if j['beginTime'] != None and j['endTime'] != None:
+                if list(j['days'])[dayDict[day]] and int(j['beginTime']) <= time and int(j['endTime']) >= time:
+                    sortedTemp.append(j)
         sorted = sortedTemp
     if subject != None:
         sortedTemp = [x for x in sorted if x['subject'] == subject]
@@ -64,8 +42,21 @@ def sortData(data, subject=None, courseNum=None, courseTitle=None, building=None
     if teacher != None:
         sortedTemp = [x for x in sorted if teacher in x['teacher']]
         sorted = sortedTemp
+    if openSeats:
+        sortedTemp = [x for x in sorted if x['seats'] > 0]
+        sorted = sortedTemp
+    if beginTime != None and endTime != None:
+        sortedTemp = []
+        for j in sorted:
+            if j['beginTime'] != None and j['endTime'] != None:
+                if int(j['beginTime']) <= endTime and int(j['endTime']) >= beginTime:
+                    sortedTemp.append(j)
+        sorted = sortedTemp
 
     return sorted
 
-print(sortData(data, teacher="Haydon"))
 
+sorted = sortData(data, building='VMS')
+print(f"Courses Found: {len(sorted)}")
+for x in sorted:
+    print(x)
