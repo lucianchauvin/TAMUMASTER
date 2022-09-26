@@ -23,6 +23,8 @@ for i in data:
         lat, lng = 0,0
     if i['reference'] != '':
         reference = i['reference'][0]
+    else:
+        continue
 
     geojson['features'].append({
         "type": "Feature",

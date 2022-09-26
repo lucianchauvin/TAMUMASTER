@@ -26,25 +26,26 @@
       zoom: 15.5
     });
 
-    map.on('load', function () {
-      map.addSource('geojson-overlay', {
-        'type': 'geojson',
-        'data': 'https://api.maptiler.com/data/a5124a84-277e-4d56-bf8e-b90c03add8e0/features.json?key=Yn14RMJ5TL4jFpJSAG80'
+      map.on('load', function () {
+        map.addSource('geojson-overlay', {
+          'type': 'geojson',
+          'data': 'https://api.maptiler.com/data/19aa0246-cfcb-47d4-8f8c-3d850ae93c6d/features.json?key=Yn14RMJ5TL4jFpJSAG80'
+        });
+        map.addLayer({
+          'id': 'geojson-overlay-point',
+          'type': 'circle',
+          'source': 'geojson-overlay',
+          'filter': ['==', '$type', 'Point'],
+          'layout': {},
+          'paint': {
+            'circle-color': 'rgb(68, 138, 255)',
+            'circle-stroke-color': '#fff',
+            'circle-stroke-width': 2,
+            'circle-radius': 5
+          }
+        });
       });
-      map.addLayer({
-        'id': 'geojson-overlay-point',
-        'type': 'circle',
-        'source': 'geojson-overlay',
-        'filter': ['==', '$type', 'Point'],
-        'layout': {},
-        'paint': {
-          'circle-color': 'rgb(68, 138, 255)',
-          'circle-stroke-color': '#fff',
-          'circle-radius': 5  
-        }
-      });
-    });
-  </script>
-</body>
-
-</html>
+    </script>
+  </body>
+  
+  </html>
